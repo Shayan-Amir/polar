@@ -81,6 +81,9 @@ async def list(
         default=None,
         description="Filter by visibility.",
     ),
+    include_deleted: bool = Query(
+        False, description="Whether to include soft-deleted products in the results."
+    ),
     session: AsyncReadSession = Depends(get_db_read_session),
 ) -> ListResource[ProductSchema]:
     """List products."""

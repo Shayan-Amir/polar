@@ -226,6 +226,9 @@ async def update(
     id: BenefitID,
     benefit_update: BenefitUpdate,
     auth_subject: auth.BenefitsWrite,
+    notify_subscribers: bool = Query(
+        False, description="Whether to notify subscribers granted this benefit of the update."
+    ),
     session: AsyncSession = Depends(get_db_session),
     redis: Redis = Depends(get_redis),
 ) -> Benefit:

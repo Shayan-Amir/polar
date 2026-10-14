@@ -106,26 +106,6 @@ async def list(
     )
 
 
-@router.get(
-    "/{id}",
-    summary="Get Product",
-    response_model=ProductSchema,
-    responses={404: ProductNotFound},
-)
-async def get(
-    id: ProductID,
-    auth_subject: auth.CreatorProductsRead,
-    session: AsyncReadSession = Depends(get_db_read_session),
-) -> Product:
-    """Get a product by ID."""
-    product = await product_service.get(session, auth_subject, id)
-
-    if product is None:
-        raise ResourceNotFound()
-
-    return product
-
-
 @router.post(
     "/",
     response_model=ProductSchema,

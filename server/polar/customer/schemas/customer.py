@@ -148,7 +148,7 @@ class CustomerUpdateBase(MetadataInputMixin, Schema):
     name: CustomerNameInput | None = None
     billing_address: AddressInput | None = None
     tax_id: Annotated[str | None, EmptyStrToNoneValidator] = None
-    locale: Locale | None = None
+    locale: str | None = None
 
 
 class CustomerUpdate(CustomerUpdateBase):

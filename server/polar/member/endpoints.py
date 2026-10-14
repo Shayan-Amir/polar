@@ -204,42 +204,6 @@ async def list_external(
 
 
 @customer_members_router.post(
-    "/{id}/members",
-    response_model=Member,
-    status_code=201,
-    summary="Create Member",
-    responses={
-        201: {"description": "Member created."},
-        403: NotPermittedToAddMembers,
-        404: CustomerNotFound,
-    },
-)
-async def create(
-    id: CustomerID,
-    member_create: MemberCreateFromCustomer,
-    auth_subject: auth.MemberWrite,
-    session: AsyncSession = Depends(get_db_session),
-) -> Member:
-    """
-    Create a new member for a customer.
-
-    Only B2B customers with the member management feature enabled can add members.
-    The authenticated user or organization must have access to the customer's organization.
-    """
-    created_member = await member_service.create(
-        session,
-        auth_subject,
-        customer_id=id,
-        email=member_create.email,
-        name=member_create.name,
-        external_id=member_create.external_id,
-        role=member_create.role,
-    )
-
-    return Member.model_validate(created_member)
-
-
-@customer_members_router.post(
     "/external/{external_id}/members",
     response_model=Member,
     status_code=201,

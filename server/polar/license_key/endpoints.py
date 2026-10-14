@@ -240,38 +240,6 @@ async def validate(
 
 
 @router.post(
-    "/activate",
-    summary="Activate License Key",
-    response_model=LicenseKeyActivationCreated,
-    responses={
-        403: ActivationNotPermitted,
-        404: NotFoundResponse,
-    },
-)
-async def activate(
-    auth_subject: auth.LicenseKeysWrite,
-    activate: LicenseKeyActivate,
-    session: AsyncSession = Depends(get_db_session),
-) -> LicenseKeyActivation:
-    """Activate a license key instance."""
-    repository = LicenseKeyRepository.from_session(session)
-    org_ids = await get_accessible_org_ids(session, auth_subject)
-    license_key = await repository.get_readable_by_key(
-        activate.key,
-        activate.organization_id,
-        org_ids,
-        options=repository.get_eager_options(),
-    )
-
-    if license_key is None:
-        raise ResourceNotFound()
-
-    return await license_key_service.activate(
-        session, license_key=license_key, activate=activate
-    )
-
-
-@router.post(
     "/deactivate",
     summary="Deactivate License Key",
     status_code=204,

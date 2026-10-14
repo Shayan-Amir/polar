@@ -20,7 +20,7 @@ from polar.routing import APIRouter
 
 from . import auth, sorting
 from .schemas import CustomField as CustomFieldSchema
-from .schemas import CustomFieldAdapter, CustomFieldCreate, CustomFieldUpdate
+from .schemas import CustomFieldAdapter, CustomFieldCreate
 from .service import custom_field as custom_field_service
 
 router = APIRouter(
@@ -105,51 +105,3 @@ async def create(
     """Create a custom field."""
     return await custom_field_service.create(session, custom_field_create, auth_subject)
 
-
-@router.patch(
-    "/{id}",
-    response_model=CustomFieldSchema,
-    summary="Update Custom Field",
-    responses={
-        200: {"description": "Custom field updated."},
-        404: CustomFieldNotFound,
-    },
-)
-async def update(
-    id: CustomFieldID,
-    custom_field_update: CustomFieldUpdate,
-    auth_subject: auth.CustomFieldWrite,
-    session: AsyncSession = Depends(get_db_session),
-) -> CustomField:
-    """Update a custom field."""
-    custom_field = await custom_field_service.get_by_id(session, auth_subject, id)
-
-    if custom_field is None:
-        raise ResourceNotFound()
-
-    return await custom_field_service.update(
-        session, custom_field, custom_field_update, auth_subject
-    )
-
-
-@router.delete(
-    "/{id}",
-    status_code=204,
-    summary="Delete Custom Field",
-    responses={
-        204: {"description": "Custom field deleted."},
-        404: CustomFieldNotFound,
-    },
-)
-async def delete(
-    id: CustomFieldID,
-    auth_subject: auth.CustomFieldWrite,
-    session: AsyncSession = Depends(get_db_session),
-) -> None:
-    """Delete a custom field."""
-    custom_field = await custom_field_service.get_by_id(session, auth_subject, id)
-
-    if custom_field is None:
-        raise ResourceNotFound()
-
-    await custom_field_service.delete(session, custom_field, auth_subject)

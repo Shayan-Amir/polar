@@ -267,6 +267,7 @@ async def top(
 async def get(
     id: CustomerID,
     auth_subject: auth.CustomerRead,
+    include_metadata: bool = Query(..., description="Whether to include the customer's own metadata in the response."),
     session: AsyncReadSession = Depends(get_db_read_session),
 ) -> Customer:
     """Get a customer by ID."""

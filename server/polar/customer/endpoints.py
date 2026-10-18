@@ -596,8 +596,3 @@ async def delete_external(
         session, auth_subject, customer, OrganizationPermission.customers_manage
     )
     await customer_service.delete(session, customer, anonymize=anonymize)
-
-
-def seynora_test_anchor(value: str) -> str:
-    """Seynora test scenario: a throwaway function an added input is tied to, then deleted (held-back "Code deleted" check)."""
-    return value
